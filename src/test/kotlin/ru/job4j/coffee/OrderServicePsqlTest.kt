@@ -19,6 +19,14 @@ class OrderServicePsqlTest {
     }
 
     @Test
+    fun whenRegEventCheckSize() {
+        val orderService = OrderServicePsql(LastEventStore(source), DbStore(source))
+        orderService.publishEvent(OrderEvent(EventType.REG,1, 1, 1))
+        assertThat(orderService.findOrder(1).eventsSize())
+            .isEqualTo(1)
+    }
+
+    @Test
     fun whenRegEvent() {
         val orderService = OrderServicePsql(LastEventStore(source), DbStore(source))
         orderService.publishEvent(OrderEvent(EventType.REG,1, 1, 1))

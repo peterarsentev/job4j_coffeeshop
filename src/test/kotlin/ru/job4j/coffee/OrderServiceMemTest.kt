@@ -8,6 +8,14 @@ import java.lang.Exception
 class OrderServiceMemTest {
 
     @Test
+    fun whenRegEventCheckSize() {
+        val orderService = OrderServiceMem(MemStore())
+        orderService.publishEvent(OrderEvent(EventType.REG,1, 1, 1))
+        assertThat(orderService.findOrder(1).eventsSize())
+            .isEqualTo(1)
+    }
+
+    @Test
     fun whenRegEvent() {
         val orderService = OrderServiceMem(MemStore())
         orderService.publishEvent(OrderEvent(EventType.REG,1, 1, 1))
@@ -22,6 +30,8 @@ class OrderServiceMemTest {
         orderService.publishEvent(OrderEvent(EventType.IN_PROCESS,1, 1, 2))
         assertThat(orderService.findOrder(1).status())
             .isEqualTo(EventType.IN_PROCESS)
+        assertThat(orderService.findOrder(1).eventsSize())
+            .isEqualTo(2)
     }
 
     @Test
